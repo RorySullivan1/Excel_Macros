@@ -1,0 +1,70 @@
+Sub Comments_Section()
+'Optimize
+    Application.DisplayAlerts = False
+    Application.ScreenUpdating = False
+
+'Delete Repeats
+    On Error Resume Next
+    Worksheets("Errors & Comments").Delete
+'Variables
+    Dim sh As Worksheet
+    Dim cmt As Comment
+    Dim cmtT As CommentsThreaded
+    Dim r As Long
+    Dim shNum As Byte
+    Dim x As Long
+
+'Add Sheets
+    Set sh = Worksheets.Add
+    sh.Name = "Errors & Comments"
+    With Range("A1:D1")
+        .MergeCells = True
+        .Font.Underline = True
+        .Font.Bold = True
+        .Font.Name = "Arial"
+        .Font.Size = 20
+        .Value = "Comments Last Updated: " & Date
+        .HorizontalAlignment = xlCenter
+    End With
+    Range("A2").Value = "Comment"
+    Range("B2").Value = "Worksheet"
+    Range("C2").Value = "Address"
+    Range("D2").Value = "Author"
+    
+'Formatting
+    Range("A2:D2").Select
+    With Selection
+        .ColumnWidth = 30
+        .Interior.Color = RGB(190, 236, 200)
+        .Font.Name = "Arial"
+        .Font.Bold = True
+        .Font.Color = vbBlack
+    End With
+'Code
+    With sh
+        shNum = 1
+        r = 3
+For shNum = 1 To Worksheets.Count
+    'Note Comments
+    For Each cmt In Worksheets(shNum).Comments
+        .Cells(r, 1).Value = cmt.Text
+        .Cells(r, 2).Value = "'" & Worksheets(shNum).Name & "'"
+        .Cells(r, 3).Value = cmt.Parent.Address
+        .Cells(r, 4).Value = cmt.Author
+            r = r + 1
+        Next cmt
+Next shNum
+        .Columns.AutoFit
+    End With
+
+'End Optimize
+    Application.DisplayAlerts = False
+    Application.ScreenUpdating = True
+    ActiveWorkbook.Save
+    ActiveWorkbook.Save
+    ActiveWorkbook.Save
+End Sub
+
+
+'Author -> Rory Sullivan
+'Last Updateed -> 8/12/2020
